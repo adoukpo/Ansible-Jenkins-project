@@ -18,7 +18,7 @@ pipeline {
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
         ARTIFACT_PATH = 'playbooks'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
-        REPO = geolocation
+        REPO = 'geolocation'
         ARTIFACT_NAME = "my-playbooks${BUILD_ID}.zip"
     }
 
