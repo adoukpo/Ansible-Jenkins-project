@@ -32,5 +32,13 @@ pipeline {
                 }
             }
         }
+
+        stage('run play3') {
+            steps {
+                script {
+                    sh """ ansible-playbook -i ${ANSIBLE_INVENTORY_PATH} ${ANSIBLE_PLAYBOOK_PATH} """
+                }
+            }
+        }
     }
 }
