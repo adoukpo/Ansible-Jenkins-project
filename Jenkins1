@@ -3,13 +3,13 @@ pipeline {
         label 'Ansible'
     }
 
-    triggers {
-           cron('H/1 * * * *')  // Schedule to run every 5 minutes
-     }
+    // triggers {
+    //        cron('H/1 * * * *')  // Schedule to run every 5 minutes
+    //  }
 
 
     environment {
-        REMOTE_PATH = '/home/ec2-user/ansible-dev'
+        REMOTE_PATH = '/home/ec2-user/code-practice/Ansible-Jenkins-project'
         ANSIBLE_SERVER = '67.202.35.1'
         SSH_CREDENTIALS = 'ansible-master-cred'
         BRANCH_NAME = 'main'
@@ -21,6 +21,7 @@ pipeline {
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         REPO = 'geolocation'
         ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip -o play3"
+        ZIP_FILENAME = 'ansible-playbook.zip'
     }
 
     stages {
@@ -69,6 +70,19 @@ pipeline {
                          -T $ARTIFACT_NAME \
                          ${ARTIFACTORY_URL}/${REPO}/${ARTIFACT_NAME}
                 '''
+                    }
+                }
+            }
+        }
+        stage('Deploy to Ansible Server') {
+            steps {
+                sshagent(credentials: [SSH_CREDENTIALS]) {
+                    script {
+                        // Using SSH with StrictHostKeyChecking disabled
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${ANSIBLE_SERVER} 'echo Connected'"
+
+                        // Copy the ZIP file to the remote server
+                        sh "scp -o StrictHostKeyChecking=no ${ZIP_FILENAME} ec2-user@${ANSIBLE_SERVER}:${REMOTE_PATH}/${ZIP_FILENAME}"
                     }
                 }
             }
