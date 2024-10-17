@@ -19,7 +19,7 @@ pipeline {
         ARTIFACT_PATH = 'playbooks'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         REPO = 'geolocation'
-        ARTIFACT_NAME = "ansible-playbook.zip${BUILD_ID}.zip"
+        ARTIFACT_NAME = "ansible-playbook${BUILD_ID}.zip"
     }
 
     stages {
@@ -51,7 +51,7 @@ pipeline {
                     sh """" ansible-playbook -i ${ANSIBLE_PLAYBOOK_PATH} -b """
                     */
 
-                    sh """zip -o ${ARTIFACT_NAME} ${ARTIFACT_PATH} """
+                    sh """zip -r ${ARTIFACT_NAME} ${ARTIFACT_PATH} """
 
                 }
             }
