@@ -20,7 +20,7 @@ pipeline {
         ARTIFACT_PATH = 'playbooks'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         REPO = 'geolocation'
-        ARTIFACT_NAME = "zip -r Ansible-Jenkins-project${BUILD_ID}.zip -r play3"
+        ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip . -r play3"
     }
 
     stages {
