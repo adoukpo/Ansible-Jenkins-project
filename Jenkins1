@@ -19,7 +19,7 @@ pipeline {
         ARTIFACT_PATH = 'playbooks'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         REPO = 'geolocation'
-        ARTIFACT_NAME = "my-playbooks${BUILD_ID}.zip"
+        ARTIFACT_NAME = "play3${BUILD_ID}.zip"
     }
 
     stages {
