@@ -13,13 +13,14 @@ pipeline {
         ANSIBLE_SERVER = '67.202.35.1'
         SSH_CREDENTIALS = 'ansible-master-cred'
         BRANCH_NAME = 'main'
+        JFROG_CRED = 'jfrog-cred'
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
         ARTIFACT_PATH = 'playbooks'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         REPO = 'geolocation'
-        ARTIFACT_NAME = "zip -r ansible-play3${BUILD_ID}.zip . -r playbooks"
+        ARTIFACT_NAME = "zip -r Ansible-Jenkins-project${BUILD_ID}.zip . -r play3"
     }
 
     stages {
