@@ -16,6 +16,10 @@ pipeline {
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
+        ARTIFACT_PATH = 'playbooks'
+        ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
+        REPO = geolocation
+        ARTIFACT_NAME = "my-playbooks${BUILD_ID}.zip"
     }
 
     stages {
@@ -37,6 +41,34 @@ pipeline {
             steps {
                 script {
                     sh """ ansible-playbook -i ${ANSIBLE_INVENTORY_PATH} ${ANSIBLE_PLAYBOOK_PATH} """
+                }
+            }
+        }
+        stage('Package Artifact in zip file') {
+            steps {
+                script {
+                    /*
+                    sh """" ansible-playbook -i ${ANSIBLE_PLAYBOOK_PATH} -b """
+                    */
+
+                    sh """zip -r ${ARTIFACT_NAME} ${ARTIFACT_PATH} """
+
+                }
+            }
+        }
+
+        stage('Upload zip to Jfrog') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${JFROG_CRED}",
+                 usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+                    script {
+                // Upload the artifact using curl
+                sh '''
+                    curl -u $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD \
+                         -T $ARTIFACT_NAME \
+                         ${ARTIFACTORY_URL}/${REPO}/${ARTIFACT_NAME}
+                '''
+                    }
                 }
             }
         }
