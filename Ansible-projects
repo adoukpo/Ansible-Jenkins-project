@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    environment {
+       BRANCH_NAME = 'main'
+       PROJECT_URL = 'https://github.com/adoukpo/w17-ansible.git'
+       JFROG_CRED = 'jfrog-cred'
+       ARTIFACTPATH = '${ZIP_FILENAME}'
+      ARTIFACTTARGETPATH = 'ansible-playbooks${BUILD_ID}.zip'
+       ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
+       REPO = 'geoapp'
+      SSH_CREDENTIALS = 'ansible-master-cred'
+      REMOTE_PATH = '/home/ec2-user/ansible-dev'
+      ANSIBLE_SERVER = '67.202.35.1'
+      ZIP_FILENAME = 'ansible-playbook.zip'
+    }
+
+    stages {
+        stage('Git Checkout Code') {
+            steps {
+                git branch: "${BRANCH_NAME}", url: "${PROJECT_URL}"
+            }
+        }
+        stage('Package Ansible Playbook') {
+            steps {
+                sh 'zip -r ${ZIP_FILENAME} *'
+            }
+        }
+        stage('Upload ZIP to JFrog') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${JFROG_CRED}", \
+                 usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+                    script {
+                        // Upload the artifact using curl
+                        sh """
+                            curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
+                                 -T ${ARTIFACTPATH} \
+                                 ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
+                        """
+                    }
+                }
+            }
+        }
+       stage('Deploy to Ansible Server') {
+            steps {
+                sshagent(credentials: [SSH_CREDENTIALS]) {
+                    script {
+                        // Using SSH with StrictHostKeyChecking disabled
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${ANSIBLE_SERVER} 'echo Connected'"
+
+                        // Copy the ZIP file to the remote server
+                        sh "scp -o StrictHostKeyChecking=no ${ZIP_FILENAME} ec2-user@${ANSIBLE_SERVER}:${REMOTE_PATH}/${ZIP_FILENAME}"
+                    }
+                }
+            }
+        }
+}
+}
