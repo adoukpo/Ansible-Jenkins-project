@@ -22,8 +22,8 @@ pipeline {
         ARTIFACTORY_USER = 'admin'
         ARTIFACTORY_PASSWORD = 'password'
         REPO = 'geolocation'
-        ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip -o play3"
-        ZIP_FILENAME = 'play3.zip'
+        ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip -r play3"
+        ZIP_FILENAME = 'ansible-playbook.zip'
     }
 
     stages {
@@ -68,7 +68,7 @@ pipeline {
                     script {
                 // Upload the artifact using curl
                 sh '''
-                    curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
+                    curl -o ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
                          -T $ARTIFACT_PATH \
                          ${ARTIFACTORY_URL}/${REPO}/${ARTIFACT_PATH}
                 '''
