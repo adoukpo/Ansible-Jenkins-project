@@ -22,7 +22,7 @@ pipeline {
         ARTIFACTORY_USER = 'admin'
         ARTIFACTORY_PASSWORD = 'password'
         REPO = 'geolocation'
-        ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip -r play3"
+        ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip -o play3"
         ZIP_FILENAME = 'ansible-playbook.zip'
     }
 
