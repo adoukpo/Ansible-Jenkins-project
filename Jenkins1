@@ -7,7 +7,6 @@ pipeline {
     //        cron('0 0 1 * *')  // Schedule to run every month
     //  }
 
-
     environment {
         REMOTE_PATH = '/home/ec2-user'
         ANSIBLE_SERVER = '67.202.35.1'
