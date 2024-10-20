@@ -17,13 +17,14 @@ pipeline {
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
-        ARTIFACT_PATH = 'playbooks'
+        ARTIFACT_PATH = '${ZIP_FILENAME}'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         // ARTIFACTORY_USER = 'admin'
         // ARTIFACTORY_PASSWORD = 'password'
         REPO = 'geolocation'
-        ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip -o play3"
-        ZIP_FILENAME = 'ansible-playbook.zip'
+        // ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip"
+        ZIP_FILENAME = 'Jenkins1.zip'
+        ARTIFACTTARGETPATH = 'Jenkins1${BUILD_ID}.zip'
     }
 
     stages {
@@ -55,7 +56,7 @@ pipeline {
                     sh """" ansible-playbook -i ${ANSIBLE_PLAYBOOK_PATH} -b """
                     */
 
-                    sh """zip -r ${ARTIFACT_NAME} ${ARTIFACT_PATH} """
+                    sh """zip -r ${ZIP_FILENAME} """
 
                 }
             }
@@ -70,7 +71,7 @@ pipeline {
                 sh '''
                     curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
                          -T $ARTIFACT_PATH \
-                         ${ARTIFACTORY_URL}/${REPO}/${ARTIFACT_PATH}
+                         ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
                 '''
                     }
                 }
