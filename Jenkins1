@@ -97,7 +97,7 @@ pipeline {
                 // Repeat for other servers as needed
             }
         }
-    post {
+        post {
         success {
             echo 'Update completed on all servers.'
         }
