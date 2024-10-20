@@ -12,10 +12,10 @@ pipeline {
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
-        ZIP_FILENAME = 'C:\Users\mawul\devops-lab\code-practice\Ansible-Jenkins-project\Marius.zip'
+        ZIP_FILENAME = 'Jenkins1.zip'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
-        ARTIFACTTARGETPATH = 'Marius${BUILD_ID}.zip'
-        REPO = 'geolocation'
+        ARTIFACTTARGETPATH = 'Jenkins1${BUILD_ID}.zip'
+        REPO = 'geoapp'
         ARTIFACTPATH = '${ZIP_FILENAME}'
     }
 
