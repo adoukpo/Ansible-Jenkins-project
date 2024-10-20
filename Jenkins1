@@ -84,19 +84,19 @@ pipeline {
                 }
             }
         }
-        stage('Update Servers') {
-            steps {
-                Update Server 1
-                sshagent (credentials: ['ssh-server-1']) {
-                    sh 'ssh -o StrictHostKeyChecking=no user@server1 "sudo yum update -y || sudo apt update -y"'
-                }
-                // Update Server 2
-                sshagent (credentials: ['ssh-server-2']) {
-                    sh 'ssh -o StrictHostKeyChecking=no user@server2 "sudo yum update -y || sudo apt update -y"'
-                }
-                // Repeat for other servers as needed
-            }
-        }
+        // stage('Update Servers') {
+        //     steps {
+        //         // Update Server 1
+        //         sshagent (credentials: ['ssh-server-1']) {
+        //             sh 'ssh -o StrictHostKeyChecking=no user@server1 "sudo yum update -y || sudo apt update -y"'
+        //         }
+        //         // Update Server 2
+        //         sshagent (credentials: ['ssh-server-2']) {
+        //             sh 'ssh -o StrictHostKeyChecking=no user@server2 "sudo yum update -y || sudo apt update -y"'
+        //         }
+        //         // Repeat for other servers as needed
+        //     }
+        // }
     // post {
     //     success {
     //         echo 'Update completed on all servers.'
