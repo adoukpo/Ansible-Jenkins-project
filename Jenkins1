@@ -16,6 +16,7 @@ pipeline {
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         ARTIFACTTARGETPATH = 'Jenkins1${BUILD_ID}.zip'
         REPO = 'geolocation'
+        ARTIFACTPATH = '${ZIP_FILENAME}'
     }
 
     stages {
@@ -54,7 +55,7 @@ pipeline {
                     script {
                         sh """
                             curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
-                                 -T ${ZIP_FILENAME} \
+                                 -T ${ARTIFACTPATH} \
                                  ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
                         """
                     }
