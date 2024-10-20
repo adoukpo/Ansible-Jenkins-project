@@ -17,7 +17,7 @@ pipeline {
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
-        ARTIFACT_PATH = '${ZIP_FILENAME}'
+        ARTIFACT_PATH = 'target/*.zip'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         // ARTIFACTORY_USER = 'admin'
         // ARTIFACTORY_PASSWORD = 'password'
