@@ -1,0 +1,73 @@
+---
+- name: Configure QA Server and Deploy Spring Boot Application
+  hosts: qa_servers  # Replace with your target host group
+  become: yes  # Run tasks with elevated privileges
+
+  vars:
+    artifact_url: "http://54.197.123.86:8081/artifactory"  # Change as needed
+    artifact_directory: "/opt/qa/spg"
+    app_port: 8082
+    username: "admin"
+    password: "devops"
+
+  tasks:
+    # Step 1: Configure the QA server
+    - name: Install required packages
+      yum:
+        name:
+          - lsof
+          - wget
+          - passwd
+          - docker
+          - unzip
+          - java-11
+        state: present
+
+    - name: Create application directory
+      file:
+        path: "{{ artifact_directory }}"
+        state: directory
+        mode: '0755'
+
+    - name: Create the log file
+      file:
+        path: "{{ artifact_directory }}/spg.log"
+        state: touch
+        mode: '0644'
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    # Step 2: Deploy the Spring Boot application
+    - name: Delete old artifact
+      file:
+        path: "{{ artifact_directory }}/*.jar"
+        state: absent
+
+    - name: Check if application is running on the specified port
+      shell: |
+        lsof -i :{{ app_port }} | grep LISTEN | awk '{print $2}'
+      register: app_pid
+      ignore_errors: yes
+
+    - name: Kill the application if it is running
+      shell: |
+        kill -9 {{ app_pid.stdout }}
+      when: app_pid.stdout != ""
+      ignore_errors: yes
+
+    - name: Download new artifact from Nexus
+      get_url:
+        url: "{{ artifact_url }}"
+        dest: "{{ artifact_directory }}/"
+        url_username: "{{ username }}"
+        url_password: "{{ password }}"
+
+    - name: Start the application in the background
+      shell: |
+        nohup java -jar {{ artifact_directory }}/*.jar > {{ artifact_directory }}/spg.log 2>&1 &
+      async: 0  # Run this command in the background
+      poll: 0   # Do not wait for the command to complete
