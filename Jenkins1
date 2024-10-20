@@ -4,7 +4,7 @@ pipeline {
     }
 
     environment {
-        REMOTE_PATH = '/home/ec2-user/code-practice/Ansible-Jenkins-project'
+        REMOTE_PATH = '/home/ec2-user'
         ANSIBLE_SERVER = '67.202.35.1'
         SSH_CREDENTIALS = 'ansible-master-cred'
         BRANCH_NAME = 'main'
