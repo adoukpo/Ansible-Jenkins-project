@@ -3,6 +3,10 @@ pipeline {
         label 'Ansible'
     }
 
+    // triggers {
+    //        cron('0 0 1 * *')  // Schedule to run every month
+    //  }
+
     environment {
         REMOTE_PATH = '/home/ec2-user'
         ANSIBLE_SERVER = '67.202.35.1'
@@ -19,6 +23,9 @@ pipeline {
         ARTIFACTPATH = '${ZIP_FILENAME}'
         ARTIFACTORY_USER = 'admin'
         ARTIFACTORY_PASSWORD = 'password'
+         // Assuming SSH credentials for each server
+        SSH_SERVER_1 = credentials('ssh-server-1') // Server 1 SSH credentials ID
+        SSH_SERVER_2 = credentials('ssh-server-2') // Server 2 SSH credentials ID
     }
 
     stages {
@@ -77,5 +84,26 @@ pipeline {
                 }
             }
         }
+        stage('Update Servers') {
+            steps {
+                // Update Server 1
+                sshagent (credentials: ['ssh-server-1']) {
+                    sh 'ssh -o StrictHostKeyChecking=no user@server1 "sudo yum update -y || sudo apt update -y"'
+                }
+                // Update Server 2
+                sshagent (credentials: ['ssh-server-2']) {
+                    sh 'ssh -o StrictHostKeyChecking=no user@server2 "sudo yum update -y || sudo apt update -y"'
+                }
+                // Repeat for other servers as needed
+            }
+        }
+    post {
+        success {
+            echo 'Update completed on all servers.'
+        }
+        failure {
+            echo 'Update failed on one or more servers.'
+        }
+    }
     }
 }
