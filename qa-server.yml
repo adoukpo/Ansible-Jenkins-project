@@ -1,0 +1,37 @@
+---
+- name: Configure QA Server
+  hosts: all
+  become: yes  # Ensure the tasks are run with root privileges
+  tasks:
+    - name: Install required packages
+      yum:
+        name:
+          - lsof
+          - wget
+          - passwd
+          - docker
+          - unzip
+        state: present
+
+    - name: Install Java 11
+      yum:
+        name: java-11
+        state: present
+
+    - name: Create directories for QA application
+      file:
+        path: /opt/qa/spg
+        state: directory
+        mode: '0755'
+
+    - name: Create the log file
+      file:
+        path: /opt/qa/spg/spg.log
+        state: touch
+        mode: '0644'
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes  # Ensures the service is enabled on boot
