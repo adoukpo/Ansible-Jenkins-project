@@ -53,11 +53,12 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: "${JFROG_CRED}", 
                     usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
                     script {
-                        sh """
-                            curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
-                                 -T ${ARTIFACTPATH} \
-                                 ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
-                        """
+                       sh '''
+                        curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
+                       -T ${ARTIFACTPATH} \
+                        ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
+                    '''
+
                     }
                 }
             }
