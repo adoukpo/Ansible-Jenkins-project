@@ -97,13 +97,13 @@ pipeline {
                 // Repeat for other servers as needed
             }
         }
-                post {
-        success {
-            echo 'Update completed on all servers.'
-        }
-        failure {
-            echo 'Update failed on one or more servers.'
-        }
-    }
+    // post {
+    //     success {
+    //         echo 'Update completed on all servers.'
+    //     }
+    //     failure {
+    //         echo 'Update failed on one or more servers.'
+    //     }
+    // }
     }
 }
