@@ -6,6 +6,7 @@ pipeline {
     // triggers {
     //        cron('0 0 1 * *')  // Schedule to run every month
     //  }
+    
 
     environment {
         REMOTE_PATH = '/home/ec2-user'
@@ -16,9 +17,12 @@ pipeline {
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
-        ZIP_FILENAME = 'play3.yml.zip '
+        ANSIBLE_PLAYBOOK_PATH = 'qa-server.yml'
+        ZIP_FILENAME = 'play3.yml.zip'
+        ZIP_FILENAME = 'qa-server.yml.zip'
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         ARTIFACTTARGETPATH = 'play3.yml${BUILD_ID}.zip'
+        ARTIFACTTARGETPATH = 'qa-server.yml${BUILD_ID}.zip'
         REPO = 'geoapp'
         ARTIFACTPATH = '${ZIP_FILENAME}'
         ARTIFACTORY_USER = 'admin'

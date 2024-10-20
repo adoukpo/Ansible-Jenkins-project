@@ -1,9 +1,9 @@
 ---
 - name: Configure QA Server
   hosts: all
-  become: yes  # Ensure the tasks are run with root privileges
+  become: yes
   tasks:
-    - name: Install required packages
+    - name: Install required packages on RedHat-based systems
       yum:
         name:
           - lsof
@@ -12,11 +12,32 @@
           - docker
           - unzip
         state: present
+      when: ansible_facts['pkg_mgr'] == 'yum'
 
-    - name: Install Java 11
+    - name: Install required packages on Debian-based systems
+      apt:
+        name:
+          - lsof
+          - wget
+          - passwd
+          - docker.io
+          - unzip
+        state: present
+        update_cache: yes
+      when: ansible_facts['pkg_mgr'] == 'apt'
+
+    - name: Install Java 11 on RedHat-based systems
       yum:
         name: java-11
         state: present
+      when: ansible_facts['pkg_mgr'] == 'yum'
+
+    - name: Install Java 11 on Debian-based systems
+      apt:
+        name: openjdk-11-jdk
+        state: present
+        update_cache: yes
+      when: ansible_facts['pkg_mgr'] == 'apt'
 
     - name: Create directories for QA application
       file:
@@ -30,8 +51,16 @@
         state: touch
         mode: '0644'
 
-    - name: Start Docker service
+    - name: Start Docker service on RedHat-based systems
       systemd:
         name: docker
         state: started
-        enabled: yes  # Ensures the service is enabled on boot
+        enabled: yes
+      when: ansible_facts['pkg_mgr'] == 'yum'
+
+    - name: Start Docker service on Debian-based systems
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+      when: ansible_facts['pkg_mgr'] == 'apt'
