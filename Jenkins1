@@ -51,15 +51,14 @@ pipeline {
         }
         stage('Package Artifact in zip file') {
             steps {
-                script {
                     /*
                     sh """" ansible-playbook -i ${ANSIBLE_PLAYBOOK_PATH} -b """
                     */
 
-                    sh """zip -r ${ZIP_FILENAME} """
+                    // sh """zip -r ${ZIP_FILENAME} """
+                    sh 'zip -r ${ZIP_FILENAME} *'
 
                 }
-            }
         }
 
         stage('Upload zip to Jfrog') {
