@@ -17,6 +17,8 @@ pipeline {
         ARTIFACTTARGETPATH = 'play3.yml${BUILD_ID}.zip'
         REPO = 'geoapp'
         ARTIFACTPATH = '${ZIP_FILENAME}'
+        ARTIFACTORY_USER = 'admin'
+        ARTIFACTORY_PASSWORD = 'password'
     }
 
     stages {
