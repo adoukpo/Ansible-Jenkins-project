@@ -23,9 +23,9 @@ pipeline {
         ARTIFACTPATH = '${ZIP_FILENAME}'
         ARTIFACTORY_USER = 'admin'
         ARTIFACTORY_PASSWORD = 'password'
-         // Assuming SSH credentials for each server
-        SSH_SERVER_1 = credentials('ssh-server-1') // Server 1 SSH credentials ID
-        SSH_SERVER_2 = credentials('ssh-server-2') // Server 2 SSH credentials ID
+        //  // Assuming SSH credentials for each server
+        // SSH_SERVER_1 = credentials('ssh-server-1') // Server 1 SSH credentials ID
+        // SSH_SERVER_2 = credentials('ssh-server-2') // Server 2 SSH credentials ID
     }
 
     stages {
