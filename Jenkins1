@@ -3,11 +3,6 @@ pipeline {
         label 'Ansible'
     }
 
-    // triggers {
-    //        cron('H/1 * * * *')  // Schedule to run every 5 minutes
-    //  }
-
-
     environment {
         REMOTE_PATH = '/home/ec2-user/code-practice/Ansible-Jenkins-project'
         ANSIBLE_SERVER = '67.202.35.1'
@@ -17,14 +12,11 @@ pipeline {
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
-        ARTIFACT_PATH = 'target/*.zip'
+        ARTIFACT_PATH = 'target/*.zip'  // Corrected this variable name
         ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
-        // ARTIFACTORY_USER = 'admin'
-        // ARTIFACTORY_PASSWORD = 'password'
-        REPO = 'geolocation'
-        // ARTIFACT_NAME = "zip -r ansible-playbook${BUILD_ID}.zip"
         ZIP_FILENAME = 'Jenkins1.zip'
         ARTIFACTTARGETPATH = 'Jenkins1${BUILD_ID}.zip'
+        REPO = 'geolocation'
     }
 
     stages {
@@ -34,53 +26,47 @@ pipeline {
             }
         }
 
-        stage('testing play3') {
+        stage('Testing playbook syntax') {
             steps {
                 script {
-                    sh """ ansible-playbook -i ${ANSIBLE_INVENTORY_PATH} ${ANSIBLE_PLAYBOOK_PATH} --syntax-check """
+                    sh "ansible-playbook -i ${ANSIBLE_INVENTORY_PATH} ${ANSIBLE_PLAYBOOK_PATH} --syntax-check"
                 }
             }
         }
 
-        stage('run play3') {
+        stage('Run Playbook') {
             steps {
                 script {
-                    sh """ ansible-playbook -i ${ANSIBLE_INVENTORY_PATH} ${ANSIBLE_PLAYBOOK_PATH} """
+                    sh "ansible-playbook -i ${ANSIBLE_INVENTORY_PATH} ${ANSIBLE_PLAYBOOK_PATH}"
                 }
             }
         }
-        stage('Package Artifact in zip file') {
+
+        stage('Package Artifact into ZIP') {
             steps {
-                    /*
-                    sh """" ansible-playbook -i ${ANSIBLE_PLAYBOOK_PATH} -b """
-                    */
-
-                    // sh """zip -r ${ZIP_FILENAME} """
-                    sh 'zip -r ${ZIP_FILENAME} *'
-
-                }
+                sh "zip -r ${ZIP_FILENAME} *"
+            }
         }
 
         stage('Upload ZIP to JFrog') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${JFROG_CRED}", \
-                 usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: "${JFROG_CRED}", 
+                    usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
                     script {
-                        // Upload the artifact using curl
                         sh """
                             curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
-                                 -T ${ARTIFACTPATH} \
+                                 -T ${ARTIFACT_PATH} \
                                  ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
                         """
                     }
                 }
             }
         }
+
         stage('Deploy to Ansible Server') {
             steps {
                 sshagent(credentials: [SSH_CREDENTIALS]) {
                     script {
-                        // Using SSH with StrictHostKeyChecking disabled
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${ANSIBLE_SERVER} 'echo Connected'"
 
                         // Copy the ZIP file to the remote server
