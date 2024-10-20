@@ -86,7 +86,7 @@ pipeline {
         }
         stage('Update Servers') {
             steps {
-                // Update Server 1
+                Update Server 1
                 sshagent (credentials: ['ssh-server-1']) {
                     sh 'ssh -o StrictHostKeyChecking=no user@server1 "sudo yum update -y || sudo apt update -y"'
                 }
