@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'Ansible'
+        label 'any'
     }
 
     environment {
@@ -12,9 +12,8 @@ pipeline {
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
-        ARTIFACT_PATH = 'target/*.zip'  // Corrected this variable name
-        ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         ZIP_FILENAME = 'Jenkins1.zip'
+        ARTIFACTORY_URL = 'http://54.197.123.86:8081/artifactory'
         ARTIFACTTARGETPATH = 'Jenkins1${BUILD_ID}.zip'
         REPO = 'geolocation'
     }
@@ -55,7 +54,7 @@ pipeline {
                     script {
                         sh """
                             curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
-                                 -T ${ARTIFACT_PATH} \
+                                 -T ${ZIP_FILENAME} \
                                  ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
                         """
                     }
