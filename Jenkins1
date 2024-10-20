@@ -8,7 +8,7 @@ pipeline {
         ANSIBLE_SERVER = '67.202.35.1'
         SSH_CREDENTIALS = 'ansible-master-cred'
         BRANCH_NAME = 'main'
-        JFROG_CRED = 'jfrog-cred'
+        JFROG_CRED = 'jfrog'
         PROJECT_URL = 'https://github.com/adoukpo/Ansible-Jenkins-project.git'
         ANSIBLE_INVENTORY_PATH = 'inventory.yml'
         ANSIBLE_PLAYBOOK_PATH = 'play3.yml'
@@ -53,12 +53,11 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: "${JFROG_CRED}", 
                     usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
                     script {
-                       sh '''
-                        curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
-                       -T ${ARTIFACTPATH} \
-                        ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
-                    '''
-
+                        sh """
+                            curl -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
+                                 -T ${ARTIFACTPATH} \
+                                 ${ARTIFACTORY_URL}/${REPO}/${ARTIFACTTARGETPATH}
+                        """
                     }
                 }
             }
